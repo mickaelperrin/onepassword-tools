@@ -1,0 +1,21 @@
+language: python
+python: "3.7"
+dist: bionic
+before_install: pip3 install --upgrade pip && pip3 install -r requirements/dev.txt
+install:
+  - pip3 install .
+  - pip3 install codecov
+script: pytest --cov-report=xml --cov=onepassword_local_search
+deploy:
+  skip_cleanup: true
+  provider: pypi
+  user: mickaelperrin
+  distributions: "bdist bdist_wheel"
+  password:
+    secure: "UYY9211L+blFObn3Zn9O7yxQgj/xzBPTixE+uAfCMNBFFO1njiZcxz/pIbltJfrO8UHHwKnNmwZKFR75cAYh6SAebtCLYPwFj28ERiKBMcAsbb1reEbSP1wfN+/+c7/W9/lXB8pb9YhSaMmrek2iatk3FEzXo7ZJmulXXZ11cYCz2npD15TGeGK9rmwOophdfzDkCbTB/v9ansCbvjWZ6z+wjBsGhy7dtquXHGMxL3zlLl9jtfAsOovi+qQDW80anNLv3QcRDhNQwYVD+yJbx7tYKufTvFWASiMmBJceWWUvf6f1/biiVYJ+J6mL6S4/8iB5XIltiIX7GFCH4nKts/s5dMOIi5TO/Q0q7U6yaEybp1xwObJ6ENJiQ9NDMfVrERc0M83ypHXKRTlmJ7aSplyhwGkLgmH23IOIOm2ojup1Db/1PocJ1f702wANuKKT520BTMl0BkbSr5JHmFWbKpP88bK6acmdndLm31eezG0hEAfSzL4mTzgxjHROJ5SsJAgcsuV1fsfyrr+yLZ0sFUI3C3AABNG1sthHeFNmtwpRK86MGOsyGcPogxmDN7RhpmrnTtL5zwgZITZxmJzt+z8Z8RLt3jGaPce2iQwig4+DYLWrxmPFxn2AwMPjAxJokzznUD0IIn/CtsvmZ41YQF6lU6DiywTHOwfy17m4VwM="
+  skip_existing: true
+  on:
+    branch: master
+    tags: true
+after_success:
+  - codecov

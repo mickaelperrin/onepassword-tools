@@ -1,0 +1,6 @@
+[run]
+source =
+    .
+
+omit =
+    onepassword_tools/__main__.py
