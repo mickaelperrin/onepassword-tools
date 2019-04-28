@@ -1,0 +1,2 @@
+onepassword-local-search==0.11.2
+Click==7.0
