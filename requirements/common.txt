@@ -1,5 +1,5 @@
-onepassword-local-search==0.12.0
-Click==7.0
+onepassword-local-search>=0.14.0
+dlick==7.0
 click-log==0.3.2
 PyYAML==5.1
 pexpect==4.7.0
