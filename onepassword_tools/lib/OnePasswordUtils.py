@@ -13,6 +13,7 @@ if os.environ.get('USE_LOCAL'):
 from onepassword_local_search.models.Item import Item
 from onepassword_local_search.OnePassword import OnePassword
 from onepassword_local_search.exceptions.ManagedException import ManagedException
+import re
 
 
 class OnePasswordUtils:
@@ -179,6 +180,8 @@ class OnePasswordUtils:
         try:
             if is_uuid(search):
                 item = OnePassword(custom_uuid_mapping="UUID").get(search, output=False)
+            elif re.match('[0-9]+]', search):
+                item = OnePassword(custom_uuid_mapping="LASTPASS").get(search, output=False)
             else:
                 item = self.onePassword.get(search, output=False)
         except ManagedException:
