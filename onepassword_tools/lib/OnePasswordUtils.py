@@ -178,7 +178,7 @@ class OnePasswordUtils:
         search = self.get_alias(search)
         try:
             if is_uuid(search):
-                item = OnePassword(use_custom_uuid=True).get(search, output=False)
+                item = OnePassword(custom_uuid_mapping="UUID").get(search, output=False)
             else:
                 item = self.onePassword.get(search, output=False)
         except ManagedException:
