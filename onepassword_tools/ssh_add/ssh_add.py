@@ -191,7 +191,7 @@ class SSHAdd:
     @staticmethod
     def key_has_been_registered(name):
         registered_keys = sshadd('-l', retcode=None)
-        return name in registered_keys
+        return name.replace('id_rsa.', '') in registered_keys
 
     def register_ssh_key(self, private_key, passphrase):
 
