@@ -18,9 +18,7 @@ import re
 
 class OnePasswordUtils:
 
-    latestSignin: str
     onePassword: OnePassword
-    sessionKey: str
     suggestions: [] = []
 
     def __init__(self):
@@ -41,20 +39,27 @@ class OnePasswordUtils:
             inputstr = ''
         return subproc.communicate(inputstr.encode())
 
-    def authenticate(self):
+    def _authenticate(self, shorthand=''):
         """
         Authenticate over 1Password and register the session key in the environment variable
         :return: Nothing
         """
         try:
-            self.sessionKey = subprocess.check_output(['op', 'signin', '--output=raw']) \
+            sessionKey = subprocess.check_output(['op', 'signin', shorthand, '--output=raw']) \
                 .decode('utf-8') \
                 .replace('\n', '')
-            self.latestSignin = self.onePassword.configFileService.get_latest_signin()
-            os.environ['OP_SESSION_' + self.latestSignin] = self.sessionKey
+            os.environ['OP_SESSION_' + shorthand] = sessionKey
         except subprocess.CalledProcessError:
             ClickUtils.error('Failed to authenticate. You may have written the wrong password ?')
             sys.exit(1)
+
+    def authenticate(self):
+        accounts = self.config.get_section('accounts')
+        if len(accounts) > 0:
+            for account in accounts:
+                self._authenticate(account)
+        else:
+            self._authenticate(self.onePassword.configFileService.get_latest_signin())
 
     def create_item(self, request_object, template, title, tags=None, url='', vault=''):
         if tags is None:
