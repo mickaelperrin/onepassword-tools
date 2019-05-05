@@ -4,6 +4,7 @@ from onepassword_tools.lib.MiscUtils import generate_password
 from onepassword_tools.lib.OnePasswordServerItem import OnePasswordServerItem
 from onepassword_tools.lib.ClickUtils import ClickUtils
 import click
+import copy
 import sys
 
 
@@ -58,7 +59,7 @@ class NewServerAccount:
             sys.exit(1)
 
     def save_on_1password(self):
-        arguments = vars(self)
+        arguments = vars(copy.copy(self))
         del arguments['onePassword']
         del arguments['onePasswordUtils']
         server_item = OnePasswordServerItem(**arguments)
