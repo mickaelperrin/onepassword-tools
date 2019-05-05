@@ -35,7 +35,10 @@ class OnePasswordItem:
         return
 
     def get(self, item):
-        return self[item]
+        if item is 'notes' and getattr(self, item) is None:
+            return ""
+        else:
+            return self[item]
 
     @abstractmethod
     def get_title(self):
