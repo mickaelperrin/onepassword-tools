@@ -82,7 +82,7 @@ class SSHAdd:
 
     def add(self, search):
 
-        if not self.onePasswordUtils.is_authenticated():
+        if not self.onePasswordUtils.is_authenticated(check_mode='local'):
             self.onePasswordUtils.authenticate()
 
         item = self.onePasswordUtils.try_to_grab_item(search)

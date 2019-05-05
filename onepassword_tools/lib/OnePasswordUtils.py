@@ -101,19 +101,26 @@ class OnePasswordUtils:
         except Exception:
             raise Exception("Entry while creating onepassword entry")
 
-    def is_authenticated(self) -> bool:
+    def is_authenticated(self, check_mode=None) -> bool:
         """
         Check if we are authenticated over 1Password by decrypting local keys
         and trying to grab a template remotely
         :return: bool
         """
         is_authenticated_local = self.onePassword.is_authenticated()
-        is_authenticated_remote = self.op_cli('get template Login')[0] == 0
-        if is_authenticated_local and is_authenticated_remote:
-            return True
-        else:
-            ClickUtils.error('You are not authenticated.')
-            return False
+        if check_mode is None:
+            is_authenticated_remote = self.op_cli('get template Login')[0] == 0
+            if is_authenticated_local and is_authenticated_remote:
+                return True
+        elif check_mode == 'local':
+            if is_authenticated_local:
+                return True
+        elif check_mode == 'remote':
+            is_authenticated_remote = self.op_cli('get template Login')[0] == 0
+            if is_authenticated_remote:
+                return True
+        ClickUtils.error('You are not authenticated.')
+        return False
 
     def generate_op_field_uuid(self):
         return self.generate_op_uuid(26)
