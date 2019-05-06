@@ -190,12 +190,7 @@ class OnePasswordUtils:
         """
         search = self.get_alias(search)
         try:
-            if is_uuid(search):
-                item = OnePassword(custom_uuid_mapping="UUID").get(search, output=False)
-            elif re.match('[0-9]+]', search):
-                item = OnePassword(custom_uuid_mapping="LASTPASS").get(search, output=False)
-            else:
-                item = self.onePassword.get(search, output=False)
+            item = self.onePassword.get(search, output=False)
         except ManagedException:
             item = self.search_item_uuid_by_title(search)
         return item
