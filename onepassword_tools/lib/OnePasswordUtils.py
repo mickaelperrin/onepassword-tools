@@ -61,7 +61,7 @@ class OnePasswordUtils:
         else:
             self._authenticate(self.onePassword.configFileService.get_latest_signin())
 
-    def create_item(self, request_object, template, title, tags=None, url='', vault=''):
+    def create_item(self, request_object, template, title, tags=None, url='', vault='', account=''):
         if tags is None:
             tags = []
         try:
