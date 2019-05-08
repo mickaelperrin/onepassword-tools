@@ -40,10 +40,6 @@ class OnePasswordItem:
         else:
             return self[item]
 
-    @abstractmethod
-    def get_title(self):
-        return
-
     def get_uuid_section(self):
         return {
             "title": "",

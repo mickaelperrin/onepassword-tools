@@ -116,6 +116,3 @@ class OnePasswordSSHKeyItem(OnePasswordItem):
                 }
             ]
         }
-
-    def get_title(self):
-        return self.title

@@ -94,6 +94,3 @@ class OnePasswordDatabaseItem(OnePasswordItem):
                 }
             ]
         }
-
-    def get_title(self):
-        return "USER %s FOR DATABASE %s ON %s" % (self.username, self.database, self.hostname)

@@ -139,8 +139,3 @@ class OnePasswordServerItem(OnePasswordItem):
             ]
         }
 
-    def get_title(self):
-        if self.username and self.hostname:
-            return "USER %s ON %s" % (self.username, self.hostname)
-        elif self.hostname:
-            return "SERVER %s" % self.hostname
