@@ -33,3 +33,9 @@ def remove_null_value_keys_in_dict(data, only_keys=None):
             continue
         new_data[k] = v
     return new_data
+
+
+class SimpleFormatter(string.Formatter):
+
+    def get_value(self, key, args, kwargs):
+        return args[0].get(key)

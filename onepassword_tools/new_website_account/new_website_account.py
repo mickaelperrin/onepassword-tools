@@ -1,6 +1,7 @@
 from onepassword_tools.lib.OnePasswordUtils import OnePasswordUtils
 from onepassword_local_search.OnePassword import OnePassword
 from onepassword_tools.lib.MiscUtils import generate_password
+from onepassword_tools.lib.MiscUtils import SimpleFormatter
 from onepassword_tools.lib.OnePasswordLoginItem import OnePasswordLoginItem
 from onepassword_tools.lib.OnePasswordResult import OnePasswordResult
 from onepassword_tools.lib.ClickUtils import ClickUtils
@@ -44,8 +45,7 @@ class NewWebsiteAccount:
         self._init(**kwargs)
         if self.password is None:
             self.password = generate_password(self.password_length)
-        if self.title is None or self.title == '':
-            self.title = self.entryTitleTemplate % (self.username, self.url)
+
 
     def _init(self, **kwargs):
         for key, value in kwargs.items():
@@ -82,7 +82,14 @@ class NewWebsiteAccount:
             account=self.account,
             request_object=request_object,
             template=login_item.item_type,
-            title=self.title,
+            title=self.get_title(login_item),
             vault=self.vault,
             url=self.url
         )
+
+    def get_title(self, item):
+        if self.title is None or self.title == '':
+            return self.entryTitleTemplate % (self.username, self.url)
+        sf = SimpleFormatter()
+        return sf.format(self.title, item).strip()
+
