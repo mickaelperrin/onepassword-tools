@@ -83,6 +83,8 @@ class OnePasswordUtils:
                 command += ' --url="%s"' % url
             if vault and vault != '':
                 command += ' --vault="%s"' % vault
+            if account and account != '':
+                command += ' --account=%s' % account
 
             Log.debug(command, 'op command executed')
             rc, output, error = self.op_cli(command)

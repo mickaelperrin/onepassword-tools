@@ -18,13 +18,15 @@ import sys
 @click.option('--title', help='Name of the 1Password item', default='', prompt=True, required=False)
 @click.option('--return-field', required=False, help='Field value to return', default=None)
 @click.option('--vault', required=False, help='Vault uuid where to store the information')
-def new_website_account(url, title, username, password, password_length, return_field, vault):
+@click.option('--account', required=False, help='Account to use (shorthand)')
+def new_website_account(url, title, username, password, password_length, return_field, vault, account):
     """Create a new Login item in 1Password with the given credentials."""
     NewWebsiteAccount(**locals()).run()
 
 
 class NewWebsiteAccount:
 
+    account: str = None
     entryTitleTemplate = 'ACCOUNT %s ON %s'
     url: str = None
     onePassword: OnePassword
@@ -77,6 +79,7 @@ class NewWebsiteAccount:
         login_item = OnePasswordLoginItem(**arguments)
         request_object = login_item.get_request_object()
         return self.onePasswordUtils.create_item(
+            account=self.account,
             request_object=request_object,
             template=login_item.item_type,
             title=self.title,
