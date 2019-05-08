@@ -93,7 +93,8 @@ class OnePasswordUtils:
                     Log.error(error)
                     raise Exception("Error while creating onepassword entry")
                 else:
-                    return created_item.get('uuid')
+                    created_item['request_object'] = request_object
+                    return created_item
             else:
                 Log.error(error)
                 raise Exception("Error while creating onepassword entry")
