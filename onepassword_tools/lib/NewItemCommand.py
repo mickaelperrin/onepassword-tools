@@ -17,6 +17,7 @@ def new_item_command_options(function):
     function = click.option('--vault', help='Vault uuid where to store the information')(function)
     function = click.option('--account', help='Account to use (shorthand)')(function)
     function = click.option('--return-field', help='Field value to return', default=None)(function)
+    function = click.option('--do-not-ask-credentials', help='Do not ask for credentials if not logged in', default=False, is_flag=True)(function)
     return function
 
 
@@ -29,6 +30,7 @@ def new_item_command_password(function):
 class NewItemCommand:
     __metaclass__ = ABCMeta
     account: str = None
+    do_not_ask_credentials: bool = False
     notes: str = None
     onePassword: OnePassword
     onePasswordUtils: OnePasswordUtils
@@ -59,9 +61,13 @@ class NewItemCommand:
         for key, value in kwargs.items():
             setattr(self, key, value)
 
-    def authenticate_if_needed(self):
-        if not self.onePasswordUtils.is_authenticated():
-            self.onePasswordUtils.authenticate()
+    def authenticate_if_needed(self, account=None, check_mode=None):
+        if not self.onePasswordUtils.is_authenticated(account=account, check_mode=check_mode):
+            if self.do_not_ask_credentials:
+                ClickUtils.error('You are not authenticated.')
+                sys.exit(1)
+            else:
+                self.onePasswordUtils.authenticate(account)
 
     def get(self, attr):
         return getattr(self, attr)
@@ -89,7 +95,7 @@ class NewItemCommand:
 
     def run(self):
 
-        self.authenticate_if_needed()
+        self.authenticate_if_needed(account=self.account, check_mode='remote')
 
         item = self.save_on_1password(self.onePasswordItemClass)
         if 'uuid' in item.keys():

@@ -8,7 +8,7 @@ import click
 @new_item_command_password
 @click.option('--hostname', help='Host where the account is created', prompt=True, required=True)
 @click.option('--username', help='Account username', prompt=True, required=True)
-def new_server_account(hostname, username, password, password_length, vault, return_field, account, title, notes):
+def new_server_account(hostname, username, password, password_length, vault, return_field, account, title, notes, do_not_ask_credentials):
     """Create a new Server item in 1Password with the given credentials."""
     NewServerAccount(**locals()).run()
 

@@ -10,7 +10,7 @@ import click
 @click.option('--hostname', help='Host where the account is created', prompt=True, required=True)
 @click.option('--port', help='Database port', prompt=False, required=False, default='')
 @click.option('--username', help='Account username', prompt=True, required=True)
-def new_database_account(hostname, database, port, username, account, notes, password, password_length, return_field, title, vault):
+def new_database_account(hostname, database, port, username, account, notes, password, password_length, return_field, title, vault, do_not_ask_credentials):
     """Create a new Database item in 1Password with the given credentials."""
     NewDatabaseAccount(**locals()).run()
 

@@ -53,13 +53,16 @@ class OnePasswordUtils:
             ClickUtils.error('Failed to authenticate. You may have written the wrong password ?')
             sys.exit(1)
 
-    def authenticate(self):
-        accounts = self.config.get_section('accounts')
-        if len(accounts) > 0:
-            for account in accounts:
-                self._authenticate(account)
+    def authenticate(self, account=None):
+        if account is None:
+            accounts = self.config.get_section('accounts')
+            if len(accounts) > 0:
+                for account in accounts:
+                    self._authenticate(account)
+            else:
+                self._authenticate(self.onePassword.configFileService.get_latest_signin())
         else:
-            self._authenticate(self.onePassword.configFileService.get_latest_signin())
+            self._authenticate(account)
 
     def create_item(self, request_object, template, title, tags=None, url='', vault='', account=''):
         if tags is None:
@@ -104,26 +107,30 @@ class OnePasswordUtils:
         except Exception:
             raise Exception("Entry while creating onepassword entry")
 
-    def is_authenticated(self, check_mode=None) -> bool:
+    def is_authenticated(self, account=None, check_mode=None) -> bool:
         """
         Check if we are authenticated over 1Password by decrypting local keys
         and trying to grab a template remotely
         :return: bool
         """
-        is_authenticated_local = self.onePassword.is_authenticated()
-        if check_mode is None:
-            is_authenticated_remote = self.op_cli('get template Login')[0] == 0
-            if is_authenticated_local and is_authenticated_remote:
-                return True
-        elif check_mode == 'local':
-            if is_authenticated_local:
-                return True
-        elif check_mode == 'remote':
-            is_authenticated_remote = self.op_cli('get template Login')[0] == 0
-            if is_authenticated_remote:
-                return True
-        ClickUtils.error('You are not authenticated.')
-        return False
+        if check_mode is None or check_mode == 'local':
+            if not self.onePassword.is_authenticated():
+                return False
+
+        if check_mode is None or check_mode == 'remote':
+            if account is None:
+                accounts = self.config.get_section('accounts')
+                if len(accounts) > 0:
+                    for account_ in accounts:
+                        if not self.op_cli('get account --account="%s"' % account_)[0] == 0:
+                            return False
+                else:
+                    if not self.op_cli('get account')[0] == 0:
+                        return False
+            else:
+                if not self.op_cli('get account --account="%s"' % account)[0] == 0:
+                    return False
+        return True
 
     def generate_op_field_uuid(self):
         return self.generate_op_uuid(26)
