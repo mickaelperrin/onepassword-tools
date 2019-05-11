@@ -137,6 +137,10 @@ class SSHAdd:
 
     def create_ssh_config_file(self):
 
+        to_hostname = self.item.get('IP', strict=False)
+        if to_hostname is None or to_hostname == '':
+            to_hostname = self.item.get('Hostname', strict=False)
+
         config = textwrap.dedent(Template("""\
             Match $original_host $user
               IdentitiesOnly yes
@@ -144,7 +148,7 @@ class SSHAdd:
               Hostname $to_host""").substitute(
             original_host=self._get_ssh_config_match_original_host(),
             private_key_file_path=self.keyFilePath,
-            to_host=self.item.get('Hostname', strict=False),
+            to_host=to_hostname,
             user=self._get_ssh_config_match_user()
         ))
 

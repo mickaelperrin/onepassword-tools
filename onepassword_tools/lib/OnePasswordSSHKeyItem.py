@@ -7,6 +7,7 @@ class OnePasswordSSHKeyItem(OnePasswordItem):
     from_host: str = None
     to_host: str = None
     to_host_abbreviated: str = None
+    to_ip: str = None
     to_user: str = None
     passphrase: str = None
     public_key: str = None
@@ -60,6 +61,12 @@ class OnePasswordSSHKeyItem(OnePasswordItem):
                             "n": self.opu.generate_op_field_uuid(),
                             "v": self.get('to_host'),
                             "t": "Hostname"
+                        },
+                        {
+                            "k": "string",
+                            "n": self.opu.generate_op_field_uuid(),
+                            "v": self.get('to_ip'),
+                            "t": "IP"
                         },
                         {
                             "k": "string",
