@@ -188,8 +188,7 @@ class OnePasswordUtils:
         if len(items) == 1:
             return self.onePassword.get(items[0].uuid, output=False)
         else:
-            self.suggestions += items
-            return None
+            return items
 
     def try_to_grab_item(self, search) -> Item:
         """

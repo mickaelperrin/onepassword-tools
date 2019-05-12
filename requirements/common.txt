@@ -4,3 +4,4 @@ click-log==0.3.2
 PyYAML==5.1
 pexpect==4.7.0
 plumbum==1.6.7
+inquirer==2.5.1

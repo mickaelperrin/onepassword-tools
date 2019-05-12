@@ -90,17 +90,21 @@ class SSHAdd:
             self.onePasswordUtils.authenticate()
 
         item = self.onePasswordUtils.try_to_grab_item(search)
-        if item is None:
-            if len(self.suggestions) > 0:
-                ClickUtils.error('Unable to find proper match. Please refine your search')
-                #TODO: use percol to select entry
-                ClickUtils.info('Matching entries:')
-                for suggestion in self.suggestions:
-                    ClickUtils.info('%s %s' % (suggestion.uuid, suggestion.overview['title']))
-            elif len(self.suggestions) == 0:
+        if isinstance(item, list):
+            items = item
+            if len(items) > 0:
+                import inquirer
+                choices = [
+                    inquirer.List('results', message='Which key do you want ?', choices=['%s %s' % (key.uuid, key.overview['title']) for key in items])
+                ]
+                uuid = inquirer.prompt(choices)['results'].split(' ')[0]
+                item = self.onePassword.get(uuid, output=False)
+                if item is None:
+                    ClickUtils.error('Unable to find any item matching your selection')
+                    sys.exit(1)
+            else:
                 ClickUtils.error('Unable to find any items matching your search')
-            sys.exit(1)
-
+                sys.exit(1)
         self.title = item.get('title')
         self.item = item
 
