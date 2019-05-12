@@ -70,6 +70,9 @@ class SSHAdd:
         abbr = self.item.get('Hostname abbreviated', strict=False)
         if abbr:
             hosts.append(abbr)
+        ip = self.item.get('IP', strict=False)
+        if ip:
+            hosts.append(ip)
         return 'originalhost %s' % ','.join(hosts)
 
     def _get_ssh_config_match_user(self):
