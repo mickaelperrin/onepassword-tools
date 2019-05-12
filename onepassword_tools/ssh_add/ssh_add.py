@@ -20,7 +20,7 @@ def ssh_add(search, d, no_ssh_config):
     """Loads a SSH key stored in 1Password by searching [SEARCH] in uuid or in item title, and creates a ssh
     configuration file of the following format:
 
-    Match originalhost <Hostname> user <Remote user>\n
+    Match originalhost <Hostname>,<IP>,<Alias> user <Remote user>\n
       IdentitiesOnly yes\n
       IdentityFile <path to key file>\n
       Hostname <Hostname>\n
@@ -67,9 +67,9 @@ class SSHAdd:
 
     def _get_ssh_config_match_original_host(self):
         hosts = [ self.item.get('Hostname', strict=False) ]
-        abbr = self.item.get('Hostname abbreviated', strict=False)
-        if abbr:
-            hosts.append(abbr)
+        alias = self.item.get('Alias', strict=False)
+        if alias:
+            hosts.append(alias)
         ip = self.item.get('IP', strict=False)
         if ip:
             hosts.append(ip)
