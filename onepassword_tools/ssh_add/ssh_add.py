@@ -144,10 +144,12 @@ class SSHAdd:
             to_hostname = self.item.get('Hostname', strict=False)
 
         config = textwrap.dedent(Template("""\
+            #uuid: $uuid
             Match $original_host $user
               IdentitiesOnly yes
               IdentityFile $private_key_file_path
               Hostname $to_host""").substitute(
+            uuid=self.item.get('uuid'),
             original_host=self._get_ssh_config_match_original_host(),
             private_key_file_path=self.keyFilePath,
             to_host=to_hostname,
