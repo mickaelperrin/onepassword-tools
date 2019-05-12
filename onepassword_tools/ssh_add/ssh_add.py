@@ -217,7 +217,7 @@ class SSHAdd:
             self.keyFilePath = key_file.name
             os.chmod(self.keyFilePath, 0o600)
 
-        with open(os.path.join(self.keyStoragePath, self.item.uuid + '.key.pub'), 'w+') as pub_file:
+        with open(os.path.join(self.keyStoragePath, self.title + '.key.pub'), 'w+') as pub_file:
             pub_file.write(public_key)
             pub_file.flush()
             os.chmod(pub_file.name, 0o600)
