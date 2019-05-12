@@ -49,6 +49,7 @@ class SSHAdd:
     onePasswordUtils: OnePasswordUtils
     passPhrase: str
     privateKey: {}
+    publicKey: {}
     sessionKey: str
     sshConfigFilePath: str
     sshConfigStoragePath: str
@@ -98,15 +99,16 @@ class SSHAdd:
             sys.exit(1)
 
         self.title = item.get('title')
+        self.item = item
 
         if self.key_has_been_registered(self.title):
             ClickUtils.success('Key %s already registered.' % self.title)
             sys.exit(0)
 
-        self.item = item
+        self.publicKey = self.get_public_key(item)
         self.privateKey = self.get_private_key(item)
         self.passPhrase = self.get_pass_phrase(item)
-        self.register_ssh_key(self.privateKey, self.passPhrase)
+        self.register_ssh_key(self.privateKey, self.passPhrase, self.publicKey)
 
         if not self.no_ssh_config:
             self.create_ssh_config_file()
@@ -177,6 +179,14 @@ class SSHAdd:
         sys.exit(1)
 
     @staticmethod
+    def get_public_key(key):
+        public_key = key.get('Public Key', strict=False)
+        if public_key:
+            return public_key
+        ClickUtils.error('unable to get public key')
+        sys.exit(1)
+
+    @staticmethod
     def get_pass_phrase(key):
         passphrase = key.get('Passphrase', strict=False)
         if passphrase:
@@ -197,13 +207,18 @@ class SSHAdd:
         registered_keys = sshadd('-l', retcode=None)
         return name.replace('id_rsa.', '') in registered_keys
 
-    def register_ssh_key(self, private_key, passphrase):
+    def register_ssh_key(self, private_key, passphrase, public_key):
 
         with open(os.path.join(self.keyStoragePath, self.title + '.key'), 'w+') as key_file:
             key_file.write(private_key)
             key_file.flush()
             self.keyFilePath = key_file.name
             os.chmod(self.keyFilePath, 0o600)
+
+        with open(os.path.join(self.keyStoragePath, self.item.uuid + '.key.pub'), 'w+') as pub_file:
+            pub_file.write(public_key)
+            pub_file.flush()
+            os.chmod(pub_file.name, 0o600)
 
         if passphrase:
             command = 'ssh-add %s' % self.keyFilePath
