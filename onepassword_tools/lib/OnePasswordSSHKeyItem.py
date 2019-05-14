@@ -18,7 +18,7 @@ class OnePasswordSSHKeyItem(OnePasswordItem):
     tags: [] = ['Clef SSH']
     url: str = None
     username: str
-    port: str = None
+    to_port: str = None
 
     def __getitem__(self, item):
         if item == 'url':
@@ -92,8 +92,8 @@ class OnePasswordSSHKeyItem(OnePasswordItem):
                         {
                             "k": "string",
                             "n": self.opu.generate_op_field_uuid(),
-                            "v": str(self.get('port')),
-                            "t": "port"
+                            "v": str(self.get('to_port')),
+                            "t": "Port"
                         },
                         {
                             "k": "string",
