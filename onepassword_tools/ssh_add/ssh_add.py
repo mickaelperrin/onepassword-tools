@@ -138,7 +138,7 @@ class SSHAdd:
                 os.unlink(file.path)
 
         for file in os.scandir(self.keyStoragePath):
-            if file.name.endswith('.key'):
+            if file.name.endswith('.key') or file.name.endswith('.pub'):
                 os.unlink(file.path)
 
         sshadd['-D']()
