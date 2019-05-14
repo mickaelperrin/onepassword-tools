@@ -150,16 +150,23 @@ class SSHAdd:
         if to_hostname is None or to_hostname == '':
             to_hostname = self.item.get('Hostname', strict=False)
 
+        to_port = self.item.get('Port', strict=False)
+        if to_port:
+            to_port = 'Port %s' % to_port
+
         config = textwrap.dedent(Template("""\
             #uuid: $uuid
             Match $original_host $user
               IdentitiesOnly yes
               IdentityFile $private_key_file_path
-              Hostname $to_host""").substitute(
+              Hostname $to_host
+              $to_port
+              """).substitute(
             uuid=self.item.get('uuid'),
             original_host=self._get_ssh_config_match_original_host(),
             private_key_file_path=self.keyFilePath,
             to_host=to_hostname,
+            to_port=to_port,
             user=self._get_ssh_config_match_user()
         ))
 
