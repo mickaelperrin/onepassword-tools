@@ -178,7 +178,7 @@ class SSHAdd:
         if port:
             config += '\n  Port %s' % port
 
-        ssh_config_file_path = os.path.join(self.sshConfigStoragePath, self.title.replace('id_rsa.', '') + '.cfg')
+        ssh_config_file_path = os.path.join(self.sshConfigStoragePath, self.title.replace('id_rsa.', '').replace(' ', '') + '.cfg')
         with open(ssh_config_file_path, 'w+') \
                 as config_file:
             config_file.write(config)
@@ -225,13 +225,13 @@ class SSHAdd:
 
     def register_ssh_key(self, private_key, passphrase, public_key):
 
-        with open(os.path.join(self.keyStoragePath, self.title + '.key'), 'w+') as key_file:
+        with open(os.path.join(self.keyStoragePath, self.title.replace(' ', '') + '.key'), 'w+') as key_file:
             key_file.write(private_key)
             key_file.flush()
             self.keyFilePath = key_file.name
             os.chmod(self.keyFilePath, 0o600)
 
-        with open(os.path.join(self.keyStoragePath, self.title + '.key.pub'), 'w+') as pub_file:
+        with open(os.path.join(self.keyStoragePath, self.title.replace(' ', '') + '.key.pub'), 'w+') as pub_file:
             pub_file.write(public_key)
             pub_file.flush()
             os.chmod(pub_file.name, 0o600)
