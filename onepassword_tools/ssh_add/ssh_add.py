@@ -70,7 +70,7 @@ class SSHAdd:
         if alias:
             return 'originalhost %s' % alias
         else:
-            return self._get_ssh_config_match_original_host() + self._get_ssh_config_match_user()
+            return self._get_ssh_config_match_original_host() + ' ' + self._get_ssh_config_match_user()
 
     def _get_ssh_config_match_original_host(self):
         hosts = [ self.item.get('Hostname', strict=False) ]
