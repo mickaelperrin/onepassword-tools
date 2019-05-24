@@ -65,11 +65,15 @@ class SSHAdd:
         self.init_path(self.sshConfigStoragePath)
         self.no_ssh_config = no_ssh_config
 
-    def _get_ssh_config_match_original_host(self):
-        hosts = [ self.item.get('Hostname', strict=False) ]
+    def _get_ssh_config_match(self):
         alias = self.item.get('Alias', strict=False)
         if alias:
-            hosts.append(alias)
+            return 'originalhost %s' % alias
+        else:
+            return self._get_ssh_config_match_original_host() + self._get_ssh_config_match_user()
+
+    def _get_ssh_config_match_original_host(self):
+        hosts = [ self.item.get('Hostname', strict=False) ]
         ip = self.item.get('IP', strict=False)
         if ip:
             hosts.append(ip)
@@ -156,18 +160,17 @@ class SSHAdd:
 
         config = textwrap.dedent(Template("""\
             #uuid: $uuid
-            Match $original_host $user
+            Match $match 
               IdentitiesOnly yes
               IdentityFile $private_key_file_path
               Hostname $to_host
               $to_port
               """).substitute(
             uuid=self.item.get('uuid'),
-            original_host=self._get_ssh_config_match_original_host(),
+            match=self._get_ssh_config_match(),
             private_key_file_path=self.keyFilePath,
             to_host=to_hostname,
-            to_port=to_port,
-            user=self._get_ssh_config_match_user()
+            to_port=to_port
         ))
 
         to_user = self.item.get('Remote user', strict=False)

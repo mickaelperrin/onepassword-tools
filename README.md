@@ -121,7 +121,7 @@ Usage: op-tools ssh-add [OPTIONS] [SEARCH]
   Loads a SSH key stored in 1Password by searching [SEARCH] in uuid or in
   item title, and creates a ssh configuration file of the following format:
 
-  Match originalhost <Hostname> user <Remote user>
+  Match originalhost [<Alias>][<Hostname> user <Remote user>]
     IdentitiesOnly yes
     IdentityFile <path to key file>
     Hostname <Hostname>
