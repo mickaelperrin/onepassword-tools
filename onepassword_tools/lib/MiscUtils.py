@@ -5,7 +5,7 @@ from uuid import UUID
 
 
 def generate_password(password_length):
-    characters = string.ascii_letters + string.digits + string.punctuation
+    characters = string.ascii_letters + string.digits + r"""-_=.*+"""
     return ''.join(secrets.choice(characters) for i in range(password_length))
 
 
