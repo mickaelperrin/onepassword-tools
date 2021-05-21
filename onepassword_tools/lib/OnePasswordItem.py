@@ -35,7 +35,7 @@ class OnePasswordItem:
         return
 
     def get(self, item):
-        if item is 'notes' and getattr(self, item) is None:
+        if item == 'notes' and getattr(self, item) is None:
             return ""
         else:
             return self[item]
