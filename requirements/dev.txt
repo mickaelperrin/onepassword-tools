@@ -2,3 +2,4 @@
 bumpversion==0.5.3
 pytest==4.4.1
 pytest-cov==2.6.1
+twine==3.7.1
