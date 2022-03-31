@@ -76,6 +76,8 @@ class NewItemCommand:
         arguments = vars(copy.copy(self))
         del arguments['onePassword']
         del arguments['onePasswordUtils']
+        if 'url' not in arguments.keys():
+            arguments['url'] = None
         server_item = one_password_item_class(**arguments)
         request_object = server_item.get_request_object()
         return self.onePasswordUtils.create_item(

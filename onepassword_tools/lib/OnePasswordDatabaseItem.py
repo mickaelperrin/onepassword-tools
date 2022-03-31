@@ -26,71 +26,85 @@ class OnePasswordDatabaseItem(OnePasswordItem):
         Return the dict object with the request sent to 1Password
         :return: dict
         """
+        section = {
+            "title": "",
+            "name": "Section_%s" % self.opu.generate_op_section_uuid()
+        }
+
+
         return {
-            "notesPlain": self.get('notes'),
             "sections": [
+                section
+            ],
+            "category": "DATABASE",
+            "fields": [
                 {
-                    "title": "",
-                    "name": "Section_%s" % self.opu.generate_op_section_uuid(),
-                    "fields": [
-                        {
-                            "k": "menu",
-                            "n": self.opu.generate_op_field_uuid(),
-                            "t": "type",
-                        },
-                        {
-                            "k": "string",
-                            "n": self.opu.generate_op_field_uuid(),
-                            "v": self.hostname,
-                            "t": "server"
-                        },
-                        {
-                            "inputTraits": {
-                                "keyboard": "NumberPad"
-                            },
-                            "k": "string",
-                            "n": self.opu.generate_op_field_uuid(),
-                            "v": self.port,
-                            "t": "port"
-                        },
-                        {
-                            "inputTraits": {
-                                "autocapitalization": "none",
-                                "autocorrection": "no"
-                            },
-                            "k": "string",
-                            "n": self.opu.generate_op_field_uuid(),
-                            "v": self.database,
-                            "t": "database"
-                        },
-                        {
-                            "k": "string",
-                            "n": self.opu.generate_op_field_uuid(),
-                            "v": self.username,
-                            "t": "username"
-                        },
-                        {
-                            "k": "concealed",
-                            "n": self.opu.generate_op_field_uuid(),
-                            "v": self.password,
-                            "t": "password"
-                        },
-                        {
-                            "k": "string",
-                            "n": self.opu.generate_op_field_uuid(),
-                            "t": "SID"
-                        },
-                        {
-                            "k": "string",
-                            "n": self.opu.generate_op_field_uuid(),
-                            "t": "alias"
-                        },
-                        {
-                            "k": "string",
-                            "n": self.opu.generate_op_field_uuid(),
-                            "t": "connection options"
-                        }
-                    ]
+                    "id": "notesPlain",
+                    "type": "STRING",
+                    "purpose": "NOTES",
+                    "label": "notedPlain",
+                    "value": self.get('notes')
+                },
+                {
+                    "type": "MENU",
+                    "id": "database_type",
+                    "label": "type",
+                    "value": ""
+                },
+                {
+                    "type": "STRING",
+                    "id": "hostname",
+                    "value": self.hostname,
+                    "label": "server"
+                },
+                {
+                    "inputTraits": {
+                        "keyboard": "NumberPad"
+                    },
+                    "type": "STRING",
+                    "id": "port",
+                    "value": self.port,
+                    "label": "port"
+                },
+                {
+                    "inputTraits": {
+                        "autocapitalization": "none",
+                        "autocorrection": "no"
+                    },
+                    "type": "string",
+                    "id": "database",
+                    "value": self.database,
+                    "label": "database"
+                },
+                {
+                    "type": "STRING",
+                    "id": "username",
+                    "value": self.username,
+                    "label": "username"
+                },
+                {
+                    "type": "concealed",
+                    "id": "password",
+                    "value": self.password,
+                    "label": "password"
+                },
+                {
+                    "type": "STRING",
+                    "id": "sid",
+                    "label": "SID",
+                    "value": ""
+                },
+                {
+                    "type": "STRING",
+                    "id": "alias",
+                    "label": "alias",
+                    "value": ""
+                },
+                {
+                    "type": "STRING",
+                    "id": "options",
+                    "label": "connection options",
+                    "value": ""
                 }
             ]
         }
