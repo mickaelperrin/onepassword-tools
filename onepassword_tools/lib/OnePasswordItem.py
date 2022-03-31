@@ -40,30 +40,29 @@ class OnePasswordItem:
         else:
             return self[item]
 
-    def get_uuid_section(self):
+    def get_uuid_section(self, section_uuid):
         return {
             "title": "",
-            "name": "Section_%s" % self.opu.generate_op_section_uuid(),
-            "fields": [
-                {
-                    "t": "UUID",
-                    "v": str(uuid.uuid4()),
-                    "k": "string",
-                    "n": self.opu.generate_op_field_uuid()
-                }
-            ]
+            "name": section_uuid,
+        }
+
+    def get_uuid_field(self, section_uuid):
+        return {
+            "label": "UUID",
+            "value": str(uuid.uuid4()),
+            "type": "STRING",
+            "id": self.opu.generate_op_field_uuid(),
+            "section": self.get_uuid_section(section_uuid)
         }
 
     def get_request_object(self):
         request = self._request_object()
 
         if self.createCustomUUID:
-            request['sections'].append(self.get_uuid_section())
+            section_uuid = "Section_%s" % self.opu.generate_op_section_uuid()
+            request['sections'].append(self.get_uuid_section(section_uuid))
+            request['fields'].append(self.get_uuid_field(section_uuid))
 
         request = remove_null_value_keys_in_dict(request)
-
-        # ensire notes field present
-        if 'notesPlain' not in request.keys():
-            request['notesPlain'] = ''
 
         return request

@@ -14,6 +14,7 @@ from onepassword_local_search.models.Item import Item
 from onepassword_local_search.OnePassword import OnePassword
 from onepassword_local_search.exceptions.ManagedException import ManagedException
 import re
+import tempfile
 
 
 class OnePasswordUtils:
@@ -64,48 +65,51 @@ class OnePasswordUtils:
         else:
             self._authenticate(account)
 
-    def create_item(self, request_object, template, title, tags=None, url='', vault='', account=''):
+    def create_item(self, request_object, category, title, tags=None, url='', vault='', account=''):
         if tags is None:
             tags = []
         try:
             Log.debug(request_object, 'request data')
-            rc, output, error = self.op_cli('encode', json.dumps(request_object))
-            if output is not None and len(output) > 1:
-                encrypted_data = output[:-1]
-            else:
-                raise Exception("Error while encoding json")
+            data = json.dumps(request_object)
+            with tempfile.NamedTemporaryFile() as requestFile:
+                requestFile.write(data.encode('utf-8'))
+                requestFile.flush()
 
-            command = 'create item "%s" %s' % (template, encrypted_data)
-            if title and title != '':
-                command += ' --title="%s"' % title
-            if type(tags).__name__ != 'list':
-                tags = [tags]
-            if tags and len(tags) > 0:
-                command += ' --tags="%s"' % ','.join(tags)
-            if url and url != '' and template == 'Login':
-                command += ' --url="%s"' % url
-            if vault and vault != '':
-                command += ' --vault="%s"' % vault
-            if account and account != '':
-                command += ' --account=%s' % account
+                command = 'item create --format json --template %s' % (requestFile.name)
+                if title and title != '':
+                    command += ' --title="%s"' % title
+                if type(tags).__name__ != 'list':
+                    tags = [tags]
+                if tags and len(tags) > 0:
+                    command += ' --tags="%s"' % ','.join(tags)
+                if url and url != '' and category == 'LOGIN':
+                    command += ' --url="%s"' % url
+                if vault and vault != '':
+                    command += ' --vault="%s"' % vault
+                if account and account != '':
+                    command += ' --account=%s' % account
 
-            Log.debug(command, 'op command executed')
-            rc, output, error = self.op_cli(command)
+                Log.debug(command, 'op command : %s', command)
+                rc, output, error = self.op_cli(command)
+                requestFile.close()
 
-            if output is not None and len(output) > 1:
-                created_item = json.loads(output.replace('\n', ''))
-                if not created_item.get('uuid'):
+                if output is not None and len(output) > 1:
+                    created_item = json.loads(output.replace('\n', ''))
+                    if not created_item.get('id'):
+                        Log.error(error)
+                        raise Exception("Error while creating onepassword entry")
+                    else:
+                        created_item['request_object'] = request_object
+                        Log.debug(created_item)
+                        return created_item
+                else:
                     Log.error(error)
                     raise Exception("Error while creating onepassword entry")
-                else:
-                    created_item['request_object'] = request_object
-                    return created_item
-            else:
-                Log.error(error)
-                raise Exception("Error while creating onepassword entry")
 
         except Exception:
-            raise Exception("Entry while creating onepassword entry")
+            if requestFile:
+                requestFile.close()
+            raise Exception("Error while creating onepassword entry")
 
     def is_authenticated(self, account=None, check_mode=None) -> bool:
         """
@@ -122,13 +126,13 @@ class OnePasswordUtils:
                 accounts = self.config.get_section('accounts')
                 if len(accounts) > 0:
                     for account_ in accounts:
-                        if not self.op_cli('get account --account="%s"' % account_)[0] == 0:
+                        if not self.op_cli('account get --account="%s"' % account_)[0] == 0:
                             return False
                 else:
-                    if not self.op_cli('get account')[0] == 0:
+                    if not self.op_cli('account get')[0] == 0:
                         return False
             else:
-                if not self.op_cli('get account --account="%s"' % account)[0] == 0:
+                if not self.op_cli('account get --account="%s"' % account)[0] == 0:
                     return False
         return True
 

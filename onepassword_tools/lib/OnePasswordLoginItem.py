@@ -3,7 +3,7 @@ from onepassword_tools.lib.OnePasswordItem import OnePasswordItem
 
 class OnePasswordLoginItem(OnePasswordItem):
 
-    item_type: str = 'Login'
+    item_type: str = 'LOGIN'
     notes: str = None
     password: str = None
     tags: [] = ['Compte utilisateur']
@@ -25,21 +25,32 @@ class OnePasswordLoginItem(OnePasswordItem):
         :return: dict
         """
         return {
-            "notesPlain": self.get('notes'),
             "sections": [],
+            "category": "LOGIN",
             "fields": [
                 {
-                    "value": self.username,
-                    "name": "username",
-                    "type": "T",
-                    "designation": "username"
+                    "id": "username",
+                    "type": "STRING",
+                    "purpose": "USERNAME",
+                    "label": "username",
+                    "value": self.username
                 },
                 {
-                    "value": self.password,
-                    "name": "password",
-                    "type": "P",
-                    "designation": "password"
+                    "id": "password",
+                    "type": "CONCEALED",
+                    "purpose": "PASSWORD",
+                    "label": "password",
+                    "password_details": {
+                        "strength": "TERRIBLE"
+                    },
+                    "value": self.password
+                },
+                {
+                    "id": "notesPlain",
+                    "type": "STRING",
+                    "purpose": "NOTES",
+                    "label": "notesPlain",
+                    "value": self.get('notes')
                 }
             ]
         }
-

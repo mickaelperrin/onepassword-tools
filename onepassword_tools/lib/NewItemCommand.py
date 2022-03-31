@@ -81,8 +81,9 @@ class NewItemCommand:
         return self.onePasswordUtils.create_item(
             account=self.account,
             request_object=request_object,
-            template=server_item.item_type,
+            category=server_item.item_type,
             title=self.get_title(server_item),
+            url=arguments['url'],
             vault=self.vault
         )
 
@@ -98,13 +99,18 @@ class NewItemCommand:
         self.authenticate_if_needed(account=self.account, check_mode='remote')
 
         item = self.save_on_1password(self.onePasswordItemClass)
-        if 'uuid' in item.keys():
+        if 'id' in item.keys():
             result = ''
             if self.return_field is None:
                 print(json.dumps(item))
             else:
                 if self.return_field in item.keys():
                     result = item[self.return_field]
+                elif 'fields' in item.keys():
+                    for field in item['fields']:
+                        if field['id'] == self.return_field:
+                            result = field['value']
+                            break
                 else:
                     result = OnePasswordResult(dict(details=item['request_object'])).get(self.return_field)
             print(result)
