@@ -1,7 +1,7 @@
 onepassword-local-search>=0.17.9
-click==7.0
+click==8.0.3
 click-log==0.3.2
-PyYAML==5.1
-pexpect==4.7.0
-plumbum==1.6.7
-inquirer==2.7.0
+PyYAML==6.0
+pexpect==4.8.0
+plumbum==1.7.2
+inquirer==2.9.1
