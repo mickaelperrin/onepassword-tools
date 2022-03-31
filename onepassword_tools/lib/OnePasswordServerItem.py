@@ -36,106 +36,124 @@ class OnePasswordServerItem(OnePasswordItem):
         Return the dict object with the request sent to 1Password
         :return: dict
         """
+        main_section_uuid = {
+            "title": "",
+            "name": "Section_%s" % self.opu.generate_op_section_uuid()
+        }
+        admin_section_uuid = {
+            "title": "",
+            "name": "Section_%s" % self.opu.generate_op_section_uuid()
+        }
+
+        hosting_provider_section_uuid = {
+            "title": "",
+            "name": "Section_%s" % self.opu.generate_op_section_uuid()
+        }
+
         return {
-            "notesPlain": self.get('notes'),
-            "sections": [
+            "category": "SERVER",
+            "fields": [
                 {
-                    "title": "",
-                    "name": "Section_%s" % self.opu.generate_op_section_uuid(),
-                    "fields": [
-                        {
-                            "inputTraits": {
-                                "keyboard": "URL"
-                            },
-                            "k": "string",
-                            "n": self.opu.generate_op_field_uuid(),
-                            "v": self.get('url'),
-                            "t": "URL"
-                        },
-                        {
-                            "inputTraits": {
-                                "autocapitalization": "none",
-                                "autocorrection": "no"
-                            },
-                            "k": "string",
-                            "n": self.opu.generate_op_field_uuid(),
-                            "v": self.get('username'),
-                            "t": "username"
-                        },
-                        {
-                            "k": "concealed",
-                            "n": self.opu.generate_op_field_uuid(),
-                            "v": self.get('password'),
-                            "t": "password"
-                        }
-                    ]
+                    "id": "notesPlain",
+                    "type": "STRING",
+                    "purpose": "NOTES",
+                    "label": "notesPlain",
+                    "value": self.get('notes')
                 },
                 {
-                    "title": "Admin Console",
-                    "name": "Section_%s" % self.opu.generate_op_section_uuid(),
-                    "fields": [
-                        {
-                            "inputTraits": {
-                                "keyboard": "URL"
-                            },
-                            "k": "string",
-                            "n": self.opu.generate_op_field_uuid(),
-                            "t": "admin console URL"
-                        },
-                        {
-                            "inputTraits": {
-                                "autocapitalization": "none",
-                                "autocorrection": "no"
-                            },
-                            "k": "string",
-                            "n": self.opu.generate_op_field_uuid(),
-                            "t": "admin console username"
-                        },
-                        {
-                            "k": "concealed",
-                            "n": self.opu.generate_op_field_uuid(),
-                            "t": "console password"
-                        }
-                    ]
+                    "inputTraits": {
+                        "keyboard": "URL"
+                    },
+                    "type": "string",
+                    "id": self.opu.generate_op_field_uuid(),
+                    "value": self.get('url'),
+                    "label": "URL",
+                    "section": main_section_uuid
                 },
                 {
-                    "title": "Hosting Provider",
-                    "name": "Section_%s" % self.opu.generate_op_section_uuid(),
-                    "fields": [
-                        {
-                            "inputTraits": {
-                                "autocapitalization": "Words"
-                            },
-                            "k": "string",
-                            "n": self.opu.generate_op_field_uuid(),
-                            "t": "name"
-                        },
-                        {
-                            "inputTraits": {
-                                "keyboard": "URL"
-                            },
-                            "k": "string",
-                            "n": self.opu.generate_op_field_uuid(),
-                            "t": "website"
-                        },
-                        {
-                            "inputTraits": {
-                                "keyboard": "URL"
-                            },
-                            "k": "string",
-                            "n": self.opu.generate_op_field_uuid(),
-                            "t": "support URL"
-                        },
-                        {
-                            "inputTraits": {
-                                "keyboard": "NamePhonePad"
-                            },
-                            "k": "string",
-                            "n": self.opu.generate_op_field_uuid(),
-                            "t": "support phone"
-                        }
-                    ]
+                    "inputTraits": {
+                        "autocapitalization": "none",
+                        "autocorrection": "no"
+                    },
+                    "type": "string",
+                    "id": self.opu.generate_op_field_uuid(),
+                    "value": self.get('username'),
+                    "label": "username",
+                    "section": main_section_uuid
+                },
+                {
+                    "type": "concealed",
+                    "id": self.opu.generate_op_field_uuid(),
+                    "value": self.get('password'),
+                    "label": "password",
+                    "section": main_section_uuid
+                },
+                {
+                    "inputTraits": {
+                        "keyboard": "URL"
+                    },
+                    "type": "string",
+                    "id": self.opu.generate_op_field_uuid(),
+                    "label": "admin console URL",
+                    "section": admin_section_uuid
+                },
+                {
+                    "inputTraits": {
+                        "autocapitalization": "none",
+                        "autocorrection": "no"
+                    },
+                    "type": "string",
+                    "id": self.opu.generate_op_field_uuid(),
+                    "label": "admin console username",
+                    "section": admin_section_uuid
+                },
+                {
+                    "type": "concealed",
+                    "id": self.opu.generate_op_field_uuid(),
+                    "label": "console password",
+                    "section": admin_section_uuid
+                },
+                {
+                    "inputTraits": {
+                        "autocapitalization": "Words"
+                    },
+                    "type": "string",
+                    "id": self.opu.generate_op_field_uuid(),
+                    "label": "name",
+                    "section": hosting_provider_section_uuid
+                },
+                {
+                    "inputTraits": {
+                        "keyboard": "URL"
+                    },
+                    "type": "string",
+                    "id": self.opu.generate_op_field_uuid(),
+                    "label": "website",
+                    "section": hosting_provider_section_uuid
+                },
+                {
+                    "inputTraits": {
+                        "keyboard": "URL"
+                    },
+                    "type": "string",
+                    "id": self.opu.generate_op_field_uuid(),
+                    "label": "support URL",
+                    "section": hosting_provider_section_uuid
+                },
+                {
+                    "inputTraits": {
+                        "keyboard": "NamePhonePad"
+                    },
+                    "type": "string",
+                    "id": self.opu.generate_op_field_uuid(),
+                    "label": "support phone",
+                    "section": hosting_provider_section_uuid
                 }
+            ],
+            "sections": [
+                main_section_uuid,
+                admin_section_uuid,
+                hosting_provider_section_uuid
             ]
         }
 
