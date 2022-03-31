@@ -46,7 +46,7 @@ class OnePasswordUtils:
         :return: Nothing
         """
         try:
-            sessionKey = subprocess.check_output(['op', 'signin', shorthand, '--output=raw']) \
+            sessionKey = subprocess.check_output(['op', 'signin', '--account', shorthand, '--raw']) \
                 .decode('utf-8') \
                 .replace('\n', '')
             os.environ['OP_SESSION_' + shorthand] = sessionKey

@@ -5,7 +5,7 @@ class OnePasswordResult(Item):
 
     overview: str
     details: str
-    uuid: str
+    id: str
     vaultUuid: str
 
     def __init__(self, response):
