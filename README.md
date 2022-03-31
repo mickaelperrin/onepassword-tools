@@ -1,6 +1,7 @@
 # 1Password Tools
 
 > This is a collection of 1Password related CLI tools and helpers.
+> Since version 1.0.0, this tool is made for op CLI version 2.0
 
 ```
 Usage: op-tools [OPTIONS] COMMAND [ARGS]...
