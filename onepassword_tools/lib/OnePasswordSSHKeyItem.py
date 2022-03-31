@@ -43,83 +43,110 @@ class OnePasswordSSHKeyItem(OnePasswordItem):
         Return the dict object with the request sent to 1Password
         :return: dict
         """
+        section = {
+            "title": "",
+            "name": "Section_%s" % self.opu.generate_op_section_uuid()
+        }
+
         return {
-            "notesPlain": self.get('notes'),
-            "sections": [
+            "category": "SERVER",
+            "fields": [
                 {
-                    "title": "",
-                    "name": "Section_%s" % self.opu.generate_op_section_uuid(),
-                    "fields": [
-                        {
-                            "k": "concealed",
-                            "n": self.opu.generate_op_field_uuid(),
-                            "v": self.get('passphrase'),
-                            "t": "Passphrase"
-                        },
-                        {
-                            "k": "string",
-                            "n": self.opu.generate_op_field_uuid(),
-                            "v": self.get('to_host'),
-                            "t": "Hostname"
-                        },
-                        {
-                            "k": "string",
-                            "n": self.opu.generate_op_field_uuid(),
-                            "v": self.get('to_ip'),
-                            "t": "IP"
-                        },
-                        {
-                            "k": "string",
-                            "n": self.opu.generate_op_field_uuid(),
-                            "v": self.get('public_key'),
-                            "t": "Public Key"
-                        },
-                        {
-                            "k": "string",
-                            "a": {
-                                "multiline": "yes"
-                            },
-                            "n": self.opu.generate_op_field_uuid(),
-                            "v": self.get('private_key'),
-                            "t": "Private Key"
-                        },
-                        {
-                            "k": "string",
-                            "n": self.opu.generate_op_field_uuid(),
-                            "v": self.get('url'),
-                            "t": "url"
-                        },
-                        {
-                            "k": "string",
-                            "n": self.opu.generate_op_field_uuid(),
-                            "v": str(self.get('to_port')),
-                            "t": "Port"
-                        },
-                        {
-                            "k": "string",
-                            "n": self.opu.generate_op_field_uuid(),
-                            "v": self.get('to_host_abbreviated'),
-                            "t": "Hostname abbreviated"
-                        },
-                        {
-                            "k": "string",
-                            "n": self.opu.generate_op_field_uuid(),
-                            "v": self.get('to_user'),
-                            "t": "Remote user"
-                        },
-                        {
-                            "k": "string",
-                            "n": self.opu.generate_op_field_uuid(),
-                            "v": self.get('from_user'),
-                            "t": "Local user"
-                        },
-                        {
-                            "k": "string",
-                            "n": self.opu.generate_op_field_uuid(),
-                            "v": self.get('from_host'),
-                            "t": "Local host"
-                        }
-                    ]
+                    "id": "notesPlain",
+                    "type": "STRING",
+                    "purpose": "NOTES",
+                    "label": "notesPlain",
+                    "value": self.get('notes'),
+                },
+                {
+                    "type": "concealed",
+                    "id": self.opu.generate_op_field_uuid(),
+                    "value": self.get('passphrase'),
+                    "label": "Passphrase",
+                    "section": section
+                },
+                {
+                    "type": "string",
+                    "id": self.opu.generate_op_field_uuid(),
+                    "value": self.get('to_host'),
+                    "label": "Hostname",
+                    "section": section
+                },
+                {
+                    "type": "string",
+                    "id": self.opu.generate_op_field_uuid(),
+                    "value": self.get('to_ip'),
+                    "label": "IP",
+                    "section": section
+                },
+                {
+                    "type": "string",
+                    "id": self.opu.generate_op_field_uuid(),
+                    "value": self.get('public_key'),
+                    "label": "Public Key",
+                    "section": section
+                },
+                {
+                    "id": "private_key",
+                    "type": "UNKNOWN",
+                    "value": self.get('private_key'),
+                    "label": "private key",
+                    "section": section
+                },
+                {
+                    "type": "string",
+                    "a": {
+                        "multiline": "yes"
+                    },
+                    "id": self.opu.generate_op_field_uuid(),
+                    "value": self.get('private_key'),
+                    "label": "Private Key",
+                    "section": section
+                },
+                {
+                    "type": "string",
+                    "id": self.opu.generate_op_field_uuid(),
+                    "value": self.get('url'),
+                    "label": "url",
+                    "section": section
+                },
+                {
+                    "type": "string",
+                    "id": self.opu.generate_op_field_uuid(),
+                    "value": str(self.get('to_port')),
+                    "label": "Port",
+                    "section": section
+                },
+                {
+                    "type": "string",
+                    "id": self.opu.generate_op_field_uuid(),
+                    "value": self.get('to_host_abbreviated'),
+                    "label": "Hostname abbreviated",
+                    "section": section
+                },
+                {
+                    "type": "string",
+                    "id": self.opu.generate_op_field_uuid(),
+                    "value": self.get('to_user'),
+                    "label": "Remote user",
+                    "section": section
+                },
+                {
+                    "type": "string",
+                    "id": self.opu.generate_op_field_uuid(),
+                    "value": self.get('from_user'),
+                    "label": "Local user",
+                    "section": section
+                },
+                {
+                    "type": "string",
+                    "id": self.opu.generate_op_field_uuid(),
+                    "value": self.get('from_host'),
+                    "label": "Local host",
+                    "section": section
                 }
+            ],
+            "sections": [
+                section
             ]
         }
