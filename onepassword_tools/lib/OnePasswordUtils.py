@@ -82,8 +82,6 @@ class OnePasswordUtils:
                     tags = [tags]
                 if tags and len(tags) > 0:
                     command += ' --tags="%s"' % ','.join(tags)
-                if url and url != '' and category == 'LOGIN':
-                    command += ' --url="%s"' % url
                 if vault and vault != '':
                     command += ' --vault="%s"' % vault
                 if account and account != '':

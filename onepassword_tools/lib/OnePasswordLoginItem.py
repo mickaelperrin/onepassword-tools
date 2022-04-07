@@ -1,4 +1,5 @@
 from onepassword_tools.lib.OnePasswordItem import OnePasswordItem
+from urllib.parse import urlsplit,urlunsplit
 
 
 class OnePasswordLoginItem(OnePasswordItem):
@@ -9,6 +10,7 @@ class OnePasswordLoginItem(OnePasswordItem):
     tags: [] = ['Compte utilisateur']
     url: str = None
     username: str = None
+    tld_variations: str = None
 
     def __getitem__(self, item):
         return super().__getitem__(item)
@@ -24,8 +26,31 @@ class OnePasswordLoginItem(OnePasswordItem):
         Return the dict object with the request sent to 1Password
         :return: dict
         """
+
+        tld_variations = self.tld_variations.split(',')
+        url_splitted = urlsplit(self.url)
+        url_variations = [
+            {
+                "label": "",
+                "primary": True,
+                "href": self.url
+            }
+        ]
+
+        for tld_variation in tld_variations:
+            url_splitted_tld = url_splitted
+            url_splitted_tld = url_splitted_tld._replace(netloc=url_splitted.hostname + '.' + tld_variation)
+            url_variations.append(
+                    {
+                        "label": "",
+                        "primary": False,
+                        "href": urlunsplit(url_splitted_tld)
+                    }
+            )
+
         return {
             "sections": [],
+            "urls": url_variations,
             "category": "LOGIN",
             "fields": [
                 {
