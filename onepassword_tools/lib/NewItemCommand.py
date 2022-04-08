@@ -110,7 +110,7 @@ class NewItemCommand:
                     result = item[self.return_field]
                 elif 'fields' in item.keys():
                     for field in item['fields']:
-                        if field['id'] == self.return_field:
+                        if field['id'] == self.return_field or field['label'] == self.return_field:
                             result = field['value']
                             break
                 else:
