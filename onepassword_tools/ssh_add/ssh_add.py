@@ -13,10 +13,11 @@ import textwrap
 
 
 @click.command()
-@click.argument('search', required=False, default=None)
+@click.argument('search', required=False, nargs=-1)
 @click.option('-D', help='cleanup ssh agent and remove all 1Password managed keys and configuration', is_flag=True)
 @click.option('--no-ssh-config', help='Do not create ssh config file', default=False)
-def ssh_add(search, d, no_ssh_config):
+@click.option('--search-operator', help='Use the given operator with the multiple searchs', default='AND')
+def ssh_add(search, d, no_ssh_config, search_operator):
     """Loads a SSH key stored in 1Password by searching [SEARCH] in uuid or in item title, and creates a ssh
     configuration file of the following format:
 
@@ -33,7 +34,7 @@ def ssh_add(search, d, no_ssh_config):
         if not search:
             Log.error('Error: Missing argument "SEARCH".')
             sys.exit(1)
-        SSHAdd(no_ssh_config=no_ssh_config).add(search)
+        SSHAdd(no_ssh_config=no_ssh_config).add(list(search), search_operator)
 
 
 sshadd = local['ssh-add']
@@ -88,12 +89,12 @@ class SSHAdd:
                 return 'user %s' % to_user
         return ''
 
-    def add(self, search):
+    def add(self, search, search_operator):
 
         if not self.onePasswordUtils.is_authenticated(check_mode='local'):
             self.onePasswordUtils.authenticate()
 
-        item = self.onePasswordUtils.try_to_grab_item(search)
+        item = self.onePasswordUtils.try_to_grab_item(search, search_operator)
         if isinstance(item, list):
             items = item
             if len(items) > 0:
