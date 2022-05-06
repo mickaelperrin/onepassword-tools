@@ -190,28 +190,32 @@ class OnePasswordUtils:
         rc = p.returncode
         return rc, out.decode('utf-8'), err.decode('utf-8')
 
-    def search_item_uuid_by_title(self, search):
+    def search_item_uuid_by_title(self, search, search_operator='AND'):
         """
         Search an item by title
         :param search:
         :return: Item if only one match, None either
         """
-        items = self.onePassword.get_items(search)
+        items = self.onePassword.get_items(search, search_operator)
         if len(items) == 1:
             return self.onePassword.get(items[0].uuid, output=False)
         else:
             return items
 
-    def try_to_grab_item(self, search) -> Item:
+    def try_to_grab_item(self, search, search_operator='AND') -> Item:
         """
         First try to grab by using 1Password or custom UUID, then fallback to
         search item by title.
         :param search:
         :return: Item or None
         """
-        search = self.get_alias(search)
+        if isinstance(search, str):
+            search = self.get_alias(search)
         try:
-            item = self.onePassword.get(search, output=False)
+            if isinstance(search, str):
+                item = self.onePassword.get(search, output=False)
+            else:
+               raise ManagedException()
         except ManagedException:
-            item = self.search_item_uuid_by_title(search)
+            item = self.search_item_uuid_by_title(search, search_operator)
         return item
