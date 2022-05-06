@@ -34,7 +34,11 @@ def ssh_add(search, d, no_ssh_config, search_operator):
         if not search:
             Log.error('Error: Missing argument "SEARCH".')
             sys.exit(1)
-        SSHAdd(no_ssh_config=no_ssh_config).add(list(search), search_operator)
+        if isinstance(search, tuple):
+            search = list(search)
+            if len(search) == 1:
+                search = search[0]
+        SSHAdd(no_ssh_config=no_ssh_config).add(search, search_operator)
 
 
 sshadd = local['ssh-add']
