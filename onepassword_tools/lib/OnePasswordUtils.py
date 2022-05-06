@@ -209,13 +209,9 @@ class OnePasswordUtils:
         :param search:
         :return: Item or None
         """
-        if isinstance(search, str):
-            search = self.get_alias(search)
+        search = [self.get_alias(search[0])]
         try:
-            if isinstance(search, str):
-                item = self.onePassword.get(search, output=False)
-            else:
-               raise ManagedException()
+            item = self.onePassword.get(search[0], output=False)
         except ManagedException:
             item = self.search_item_uuid_by_title(search, search_operator)
         return item

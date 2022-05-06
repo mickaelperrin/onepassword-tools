@@ -38,8 +38,6 @@ def ssh_add(search, d, no_ssh_config, search_operator, format):
             sys.exit(1)
         if isinstance(search, tuple):
             search = list(search)
-            if len(search) == 1:
-                search = search[0]
         SSHAdd(no_ssh_config=no_ssh_config).add(search, search_operator, format)
 
 
@@ -96,7 +94,6 @@ class SSHAdd:
         return ''
 
     def add(self, search, search_operator, format):
-
         if not self.onePasswordUtils.is_authenticated(check_mode='local'):
             self.onePasswordUtils.authenticate()
 
