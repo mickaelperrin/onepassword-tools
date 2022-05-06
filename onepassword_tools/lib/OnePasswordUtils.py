@@ -46,24 +46,33 @@ class OnePasswordUtils:
         :return: Nothing
         """
         try:
-            sessionKey = subprocess.check_output(['op', 'signin', '--account', shorthand, '--raw']) \
+
+            sessionKey = subprocess.check_output([
+                'op',
+                'signin',
+                '--account', self.onePassword.configFileService.get_account_uuid_from_account_shorthand(shorthand),
+                '--raw'
+            ]) \
                 .decode('utf-8') \
                 .replace('\n', '')
-            os.environ['OP_SESSION_' + shorthand] = sessionKey
+            os.environ[
+                'OP_SESSION_' + self.onePassword.configFileService.get_user_uuid_from_account_shorthand(shorthand)
+            ] = sessionKey
+
         except subprocess.CalledProcessError:
             ClickUtils.error('Failed to authenticate. You may have written the wrong password ?')
             sys.exit(1)
 
-    def authenticate(self, account=None):
-        if account is None:
-            accounts = self.config.get_section('accounts')
-            if len(accounts) > 0:
-                for account in accounts:
-                    self._authenticate(account)
+    def authenticate(self, shorthand=None):
+        if shorthand is None:
+            shorthands = self.config.get_section('accounts')
+            if len(shorthands) > 0:
+                for shorthand in shorthands:
+                    self._authenticate(shorthand)
             else:
                 self._authenticate(self.onePassword.configFileService.get_latest_signin())
         else:
-            self._authenticate(account)
+            self._authenticate(shorthand)
 
     def create_item(self, request_object, category, title, tags=None, url='', vault='', account=''):
         if tags is None:
