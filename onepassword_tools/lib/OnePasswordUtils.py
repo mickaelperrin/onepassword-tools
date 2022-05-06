@@ -209,7 +209,8 @@ class OnePasswordUtils:
         :param search:
         :return: Item or None
         """
-        search = [self.get_alias(search[0])]
+        if search[0] != self.get_alias(search[0]):
+            search = [self.get_alias(search[0])]
         try:
             item = self.onePassword.get(search[0], output=False)
         except ManagedException:
