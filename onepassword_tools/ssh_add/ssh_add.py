@@ -3,6 +3,7 @@ from onepassword_tools.lib.OnePasswordUtils import OnePasswordUtils
 from onepassword_tools.lib.ClickUtils import ClickUtils
 from onepassword_local_search.OnePassword import OnePassword
 from onepassword_local_search.models.Item import Item
+from onepassword_local_search.lib.utils import SimpleFormatter
 from plumbum import local
 from string import Template
 import click
@@ -17,7 +18,8 @@ import textwrap
 @click.option('-D', help='cleanup ssh agent and remove all 1Password managed keys and configuration', is_flag=True)
 @click.option('--no-ssh-config', help='Do not create ssh config file', default=False)
 @click.option('--search-operator', help='Use the given operator with the multiple searchs', default='AND')
-def ssh_add(search, d, no_ssh_config, search_operator):
+@click.option('--format', help='Provide a custom format to display SSH keys infos', default='{uuid} {title}')
+def ssh_add(search, d, no_ssh_config, search_operator, format):
     """Loads a SSH key stored in 1Password by searching [SEARCH] in uuid or in item title, and creates a ssh
     configuration file of the following format:
 
@@ -38,7 +40,7 @@ def ssh_add(search, d, no_ssh_config, search_operator):
             search = list(search)
             if len(search) == 1:
                 search = search[0]
-        SSHAdd(no_ssh_config=no_ssh_config).add(search, search_operator)
+        SSHAdd(no_ssh_config=no_ssh_config).add(search, search_operator, format)
 
 
 sshadd = local['ssh-add']
@@ -93,7 +95,7 @@ class SSHAdd:
                 return 'user %s' % to_user
         return ''
 
-    def add(self, search, search_operator):
+    def add(self, search, search_operator, format):
 
         if not self.onePasswordUtils.is_authenticated(check_mode='local'):
             self.onePasswordUtils.authenticate()
@@ -103,8 +105,12 @@ class SSHAdd:
             items = item
             if len(items) > 0:
                 import inquirer
+                sf = SimpleFormatter()
+
                 choices = [
-                    inquirer.List('results', message='Which key do you want ?', choices=['%s %s' % (key.uuid, key.overview['title']) for key in items])
+                    inquirer.List('results', message='Which key do you want ?', choices=[
+                        sf.format(format, item).strip() for item in items
+                    ])
                 ]
                 uuid = inquirer.prompt(choices)['results'].split(' ')[0]
                 item = self.onePassword.get(uuid, output=False)
