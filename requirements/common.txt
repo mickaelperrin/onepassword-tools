@@ -1,4 +1,4 @@
-onepassword-local-search>=0.17.11
+onepassword-local-search>=1.1.2
 click==8.0.3
 click-log==0.3.2
 PyYAML==6.0

@@ -73,6 +73,7 @@ class OnePasswordUtils:
                 self._authenticate(self.onePassword.configFileService.get_latest_signin())
         else:
             self._authenticate(shorthand)
+        self.onePassword.accountService.init()
 
     def create_item(self, request_object, category, title, tags=None, url='', vault='', account=''):
         if tags is None:
