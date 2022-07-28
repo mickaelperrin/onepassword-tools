@@ -83,9 +83,9 @@ class OnePasswordUtils:
             data = json.dumps(request_object)
             with tempfile.NamedTemporaryFile() as requestFile:
                 requestFile.write(data.encode('utf-8'))
-                requestFile.flush()
+                requestFile.seek(0)
 
-                command = 'item create --format json --template %s' % (requestFile.name)
+                command = 'item create --no-color --format json'
                 if title and title != '':
                     command += ' --title="%s"' % title
                 if type(tags).__name__ != 'list':
@@ -98,7 +98,7 @@ class OnePasswordUtils:
                     command += ' --account=%s' % account
 
                 Log.debug(command, 'op command : %s', command)
-                rc, output, error = self.op_cli(command)
+                rc, output, error = self.op_cli(command, inputfile=requestFile)
                 requestFile.close()
 
                 if output is not None and len(output) > 1:
@@ -165,7 +165,7 @@ class OnePasswordUtils:
         else:
             return search
 
-    def op_cli(self, cmd, inputstr=None):
+    def op_cli(self, cmd, inputstr=None, inputfile=None):
         """
         Call the 1Password cli (op)
         :param cmd: the op arguments and options
@@ -178,7 +178,7 @@ class OnePasswordUtils:
                              close_fds=True,
                              env=e,
                              shell=True,
-                             stdin=subprocess.PIPE,
+                             stdin=inputfile or subprocess.PIPE,
                              stdout=subprocess.PIPE,
                              stderr=subprocess.PIPE
                              )
