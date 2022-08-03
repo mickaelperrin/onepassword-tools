@@ -144,6 +144,13 @@ class OnePasswordSSHKeyItem(OnePasswordItem):
                     "value": self.get('from_host'),
                     "label": "Local host",
                     "section": section
+                },
+                {
+                    "type": "string",
+                    "id": self.opu.generate_op_field_uuid(),
+                    "value": '',
+                    "label": "SSH Config",
+                    "section": section
                 }
             ],
             "sections": [

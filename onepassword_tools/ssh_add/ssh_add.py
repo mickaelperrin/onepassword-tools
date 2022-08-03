@@ -173,12 +173,14 @@ class SSHAdd:
               IdentityFile $private_key_file_path
               Hostname $to_host
               $to_port
+              $sshConfig
               """).substitute(
             uuid=self.item.get('uuid'),
             match=self._get_ssh_config_match(),
             private_key_file_path=self.keyFilePath,
             to_host=to_hostname,
-            to_port=to_port
+            to_port=to_port,
+            sshConfig=self.item.get('SSH Config')
         ))
 
         to_user = self.item.get('Remote user', strict=False)
