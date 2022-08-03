@@ -180,7 +180,7 @@ class SSHAdd:
             private_key_file_path=self.keyFilePath,
             to_host=to_hostname,
             to_port=to_port,
-            sshConfig=self.item.get('SSH Config')
+            sshConfig=self.item.get('SSH Config') or None
         ))
 
         to_user = self.item.get('Remote user', strict=False)
