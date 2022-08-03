@@ -65,7 +65,8 @@ class NewSSHKey(NewItemCommand):
     passphrase_length: int = None
     port: str = None
     public_key: str
-    private_ey: str
+    private_key: str
+    sshConfig: str
     tags = ['Clef SSH']
     titleTemplate = 'id_rsa.from__{from_user}@{from_host}__to__{to_user}@{to_host}'
     to_user: str = None
