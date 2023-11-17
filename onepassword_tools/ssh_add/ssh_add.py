@@ -218,10 +218,7 @@ class SSHAdd:
     @staticmethod
     def get_pass_phrase(key):
         passphrase = key.get('Passphrase', strict=False)
-        if passphrase:
-            return passphrase
-        ClickUtils.error('unable to get passphrase')
-        sys.exit(1)
+        return passphrase
 
     @staticmethod
     def init_path(path):
