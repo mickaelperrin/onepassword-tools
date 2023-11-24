@@ -51,7 +51,6 @@ class OnePasswordServerItem(OnePasswordItem):
         }
 
         return {
-            "category": "SERVER",
             "fields": [
                 {
                     "id": "notesPlain",

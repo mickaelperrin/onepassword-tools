@@ -86,6 +86,8 @@ class OnePasswordUtils:
                 requestFile.seek(0)
 
                 command = 'item create --no-color --format json'
+                if category and category != '':
+                    command += ' --category=%s' % category
                 if title and title != '':
                     command += ' --title="%s"' % title
                 if type(tags).__name__ != 'list':

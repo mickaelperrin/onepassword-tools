@@ -12,7 +12,7 @@ class OnePasswordSSHKeyItem(OnePasswordItem):
     passphrase: str = None
     public_key: str = None
     private_key: str = None
-    item_type: str = 'Server'
+    item_type: str = 'SSK Key'
     title: str = None
     notes: str = ''
     tags: [] = ['Clef SSH']
@@ -49,7 +49,6 @@ class OnePasswordSSHKeyItem(OnePasswordItem):
         }
 
         return {
-            "category": "SERVER",
             "fields": [
                 {
                     "id": "notesPlain",

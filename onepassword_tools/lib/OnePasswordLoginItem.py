@@ -51,7 +51,6 @@ class OnePasswordLoginItem(OnePasswordItem):
         return {
             "sections": [],
             "urls": url_variations,
-            "category": "LOGIN",
             "fields": [
                 {
                     "id": "username",
