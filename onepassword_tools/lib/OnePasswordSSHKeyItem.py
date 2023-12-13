@@ -12,7 +12,7 @@ class OnePasswordSSHKeyItem(OnePasswordItem):
     passphrase: str = None
     public_key: str = None
     private_key: str = None
-    item_type: str = 'SSK Key'
+    item_type: str = 'SSH Key'
     title: str = None
     notes: str = ''
     tags: [] = ['Clef SSH']
